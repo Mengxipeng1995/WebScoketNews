@@ -42,17 +42,11 @@
 
         function doSend() {
             if (websocket.readyState == websocket.OPEN) {
-                var msg = document.getElementById("inputMsg").value;
-                 websocket.send(msg);//调用后台handleTextMessage方法
-                // $.ajax({
-                //     url:"/myHandler/send?text="+msg,
-                //     success:function () {
-                //         alert("发送成功!");
-                //     },
-                //     error:function () {
-                //         alert("连接失败!");
-                //     }
-                // })
+                 var msg = document.getElementById("inputMsg").value;
+                 //websocket.send(msg);//调用后台handleTextMessage方法
+                $.ajax({
+                    url:"/myHandler/sendToUser?username=${toUser}&text="+msg,
+                })
 
             }
         }
@@ -70,13 +64,12 @@
     <c:forEach items="${allUsers}" var="users">
         <a href="/myHandler/sendToUserJsp?username=${users}">${users}</a>
     </c:forEach>
-
 </div>
 <div id="ltk">
 <p>输入内容:</p><br/>
 </div>
 请输入：
-<textarea rows="5" cols="10" id="inputMsg" name="inputMsg"></textarea>
+<textarea rows="5" cols="10" id="inputMsg" name="text"></textarea>
 <button onclick="doSend();">发送</button>
 </body>
 </html>

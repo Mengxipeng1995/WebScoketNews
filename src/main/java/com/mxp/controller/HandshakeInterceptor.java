@@ -7,6 +7,8 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
@@ -14,15 +16,20 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler handler, Map<String, Object> map) throws Exception {
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
-            HttpSession session = serverHttpRequest.getServletRequest().getSession(true);
-//            Map parameterMap = serverHttpRequest.getServletRequest().getParameterMap();
-//            System.out.println(parameterMap);
+            //访问地址与前台webscoket IP 地址要一样，否则这个位置获取不到session 注意:localhost  和 127.0.0.1是不同的
+            HttpSession session = serverHttpRequest.getServletRequest().getSession(false);
+            WebsocketController wb = new WebsocketController();
+
             if (session != null) {
                 //   map.put("userId", session.getAttribute("userId"));
                 //使用userName区分WebSocketHandler，以便定向发送消息
                 String userName = (String) session.getAttribute("SESSION_USERNAME");
+                session.getAttribute(userName);
                 if (userName == null) {
-                    userName = "default-system";
+                    return false;
+                }
+                if (map.containsValue(userName)){
+                    return false;
                 }
                 map.put("WEBSOCKET_USERNAME", userName);
             }

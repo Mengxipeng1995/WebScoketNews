@@ -13,7 +13,7 @@
         <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />
     </bean>
-
+    <mvc:resources mapping="/js/**" location="/js/" />
     <mvc:default-servlet-handler></mvc:default-servlet-handler>
 
 </beans>
